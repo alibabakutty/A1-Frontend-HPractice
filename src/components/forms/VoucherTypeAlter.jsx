@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import RightSideButton from '../right-side-button/RightSideButton';
-import { useParams } from 'react-router-dom';
-import { getSpecificPreDefinedVoucher, getSpecificVoucher } from '../services/MasterService';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getSpecificPreDefinedVoucher, getSpecificVoucher, updateVoucherTypeMaster } from '../services/MasterService';
 const VoucherTypeAlter = () => {
     const { type } = useParams();
+
+    const navigate = useNavigate();
     const [voucher, setVoucher] = useState({
         voucherTypeName: '',
         voucherType: '',
@@ -21,17 +23,6 @@ const VoucherTypeAlter = () => {
     
   const inputRefs = useRef([]);
 
-  useEffect(() => {
-    if (inputRefs.current[0]) {
-      inputRefs.current[0].focus();
-      pulseCursor(inputRefs.current[0]);
-    }
-
-    loadVoucherTypeName();
-
-    loadPreDefinedVoucherTypeName();
-  }, []);
-
   const pulseCursor = input => {
     const value = input.value;
     if (value) {
@@ -41,6 +32,27 @@ const VoucherTypeAlter = () => {
         input.setSelectionRange(0, 0);
       }, 0);
     }
+  };
+
+  useEffect(() => {
+    const focusAndPulseCursor = () => {
+        if (inputRefs.current[0]) {
+            inputRefs.current[0].focus();
+            pulseCursor(inputRefs.current[0]);
+        }
+    }
+
+    setTimeout(focusAndPulseCursor, 100);
+
+    loadVoucherTypeName();
+
+    loadPreDefinedVoucherTypeName();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const {name,value} = e.target;
+    const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
+    setVoucher({ ...voucher, [name]: capitalizedValue });
   };
 
   const handleKeyDown = (e, index) => {
@@ -77,13 +89,21 @@ const VoucherTypeAlter = () => {
       }
     } else if (key === 'Backspace') {
       // Move focus to the previous input field if the current field is empty
-      if (e.target.value.trim() === '' || e.target.value.trim() !== '') {
+      if ((e.target.value.trim() === '') || (e.target.value.trim() !== '')) {
         const prevField = index - 1;
         if (prevField >= 0) {
           inputRefs.current[prevField].focus();
           pulseCursor(inputRefs.current[prevField]);
         }
       }
+    } else if (key === 'Delete'){
+        // Clear the value of the current input field
+        e.target.value='';
+        setVoucher(prevVoucher => ({
+            ...prevVoucher,
+            [e.target.name]: '', // Ensure the state is updated
+        }));
+        e.preventDefault();
     }
   };
 
@@ -107,12 +127,49 @@ const VoucherTypeAlter = () => {
       
     }
   }
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const userConfirmed = window.confirm('Do you want confirm this submit!');
+    if (userConfirmed){
+        try{
+            const response = await updateVoucherTypeMaster(voucher.voucherTypeName, voucher);
+            console.log('Voucher altered successfully!', response.data);
+
+            // Reset the form fields
+            setVoucher({
+                voucherTypeName: '',
+                voucherType: '',
+                startingNumber: '',
+                widthOfNumericalPart: '',
+                prefillWithZero: '',
+                restartNumberingApplicationForm: '',
+                restartNumberingStartingNumber: '',
+                restartNumberingPeriodicity: '',
+                prefixDetailsApplicationForm: '',
+                prefixDetailsParticulars: '',
+                suffixDetailsApplicationForm: '',
+                suffixDetailsParticulars: '',
+            });
+    
+            // Optionally, focus the first input field after reset
+            if (inputRefs.current[0]) {
+                inputRefs.current[0].focus();
+            }
+        }catch(error){
+            console.error('Error creating voucher type master:', error);    
+        }
+    }
+    navigate('/voucher/alter');
+  };
   
 
   return (
     <>
       <div className="#FFF5E1 w-[90%] h-[80vh]">
-        <form action="">
+        <form action="" onSubmit={handleSubmit}>
           <div className="bg-white">
             <div className="mt-2 w-[1100px] h-[80vh]">
               <div className="w-full h-20">
@@ -128,7 +185,7 @@ const VoucherTypeAlter = () => {
                       name="voucherTypeName"
                       value={voucher.voucherTypeName}
                       ref={input => (inputRefs.current[0] = input)}
-                      
+                      onChange={handleInputChange}
                       onKeyDown={e => handleKeyDown(e, 0)}
                       onFocus={() => pulseCursor(inputRefs.current[0])}
                       className="w-[250px] ml-2 h-5 font-medium capitalize pl-1 text-sm focus:bg-yellow-200 focus:border focus:border-blue-500 focus:outline-none"
@@ -145,6 +202,7 @@ const VoucherTypeAlter = () => {
                       id="voucherType"
                       name="voucherType"
                       value={voucher.voucherType}
+                      onChange={handleInputChange}
                       ref={input => (inputRefs.current[1] = input)}
                       onFocus={() => pulseCursor(inputRefs.current[1])}
                       onKeyDown={e => handleKeyDown(e, 1)}
@@ -165,6 +223,7 @@ const VoucherTypeAlter = () => {
                       id="startingNumber"
                       name="startingNumber"
                       value={voucher.startingNumber}
+                      onChange={handleInputChange}
                       ref={input => (inputRefs.current[2] = input)}
                       
                       onKeyDown={e => handleKeyDown(e, 2)}
@@ -183,6 +242,7 @@ const VoucherTypeAlter = () => {
                       id="widthOfNumericalPart"
                       name="widthOfNumericalPart"
                       value={voucher.widthOfNumericalPart}
+                      onChange={handleInputChange}
                       ref={input => (inputRefs.current[3] = input)}
                       onKeyDown={e => handleKeyDown(e, 3)}
                       
@@ -201,6 +261,7 @@ const VoucherTypeAlter = () => {
                       id="prefillWithZero"
                       name="prefillWithZero"
                       value={voucher.prefillWithZero}
+                      onChange={handleInputChange}
                       ref={input => (inputRefs.current[4] = input)}
                       
                       onKeyDown={e => handleKeyDown(e, 4)}
@@ -231,7 +292,7 @@ const VoucherTypeAlter = () => {
                         name="restartNumberingApplicationForm"
                         value={voucher.restartNumberingApplicationForm}
                         ref={input => (inputRefs.current[5] = input)}
-                        
+                        onChange={handleInputChange}
                         onKeyDown={e => handleKeyDown(e, 5)}
                         onFocus={() => pulseCursor(inputRefs.current[5])}
                         className="w-[100px] ml-2 h-5 capitalize font-medium pl-1 text-sm focus:bg-yellow-200 focus:border focus:border-blue-500 focus:outline-none"
@@ -246,7 +307,7 @@ const VoucherTypeAlter = () => {
                         name="restartNumberingStartingNumber"
                         value={voucher.restartNumberingStartingNumber}
                         ref={input => (inputRefs.current[6] = input)}
-                        
+                        onChange={handleInputChange}
                         onKeyDown={e => handleKeyDown(e, 6)}
                         onFocus={() => pulseCursor(inputRefs.current[6])}
                         className="w-[100px] ml-2 h-5 capitalize font-medium pl-1 text-sm focus:bg-yellow-200 focus:border focus:border-blue-500 focus:outline-none"
@@ -261,7 +322,7 @@ const VoucherTypeAlter = () => {
                         name="restartNumberingPeriodicity"
                         value={voucher.restartNumberingPeriodicity}
                         ref={input => (inputRefs.current[7] = input)}
-                        
+                        onChange={handleInputChange}
                         onKeyDown={e => handleKeyDown(e, 7)}
                         onFocus={() =>
                           pulseCursor(inputRefs.current[7])
@@ -290,7 +351,7 @@ const VoucherTypeAlter = () => {
                         name="prefixDetailsApplicationForm"
                         value={voucher.prefixDetailsApplicationForm}
                         ref={input => (inputRefs.current[8] = input)}
-                        
+                        onChange={handleInputChange}
                         onKeyDown={e => handleKeyDown(e, 8)}
                         onFocus={() => pulseCursor(inputRefs.current[8])}
                         className="w-[100px] ml-2 h-5 capitalize font-medium pl-1 text-sm focus:bg-yellow-200 focus:border focus:border-blue-500 focus:outline-none"
@@ -305,7 +366,7 @@ const VoucherTypeAlter = () => {
                         name="prefixDetailsParticulars"
                         value={voucher.prefixDetailsParticulars}
                         ref={input => (inputRefs.current[9] = input)}
-                        
+                        onChange={handleInputChange}
                         onKeyDown={e => handleKeyDown(e, 9)}
                         onFocus={() => pulseCursor(inputRefs.current[9])}
                         className="w-[100px] ml-2 h-5 capitalize font-medium pl-1 text-sm focus:bg-yellow-200 focus:border focus:border-blue-500 focus:outline-none"
@@ -331,7 +392,7 @@ const VoucherTypeAlter = () => {
                         name="suffixDetailsApplicationForm"
                         value={voucher.suffixDetailsApplicationForm}
                         ref={input => (inputRefs.current[10] = input)}
-                        
+                        onChange={handleInputChange}
                         onKeyDown={e => handleKeyDown(e, 10)}
                         onFocus={() => pulseCursor(inputRefs.current[10])}
                         className="w-[100px] ml-2 h-5 capitalize font-medium pl-1 text-sm focus:bg-yellow-200 focus:border focus:border-blue-500 focus:outline-none"
@@ -345,6 +406,7 @@ const VoucherTypeAlter = () => {
                         id="suffixDetailsParticulars"
                         name="suffixDetailsParticulars"
                         value={voucher.suffixDetailsParticulars}
+                        onChange={handleInputChange}
                         ref={input => (inputRefs.current[11] = input)}
                         
                         onKeyDown={e => {

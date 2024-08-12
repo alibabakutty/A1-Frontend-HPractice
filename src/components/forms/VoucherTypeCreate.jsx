@@ -33,6 +33,7 @@ const VoucherTypeCreate = () => {
     if (inputRefs.current[0]) {
       inputRefs.current[0].focus();
       pulseCursor(inputRefs.current[0]);
+
     }
   }, []);
 
@@ -446,8 +447,8 @@ const VoucherTypeCreate = () => {
                       />
                       {periodicityFocused && periodicitySuggestions.length > 0 && (
                         <div
-                          className="w-[200px] h-[30vh] border border-gray-500 bg-[#CAF4FF]"
-                          style={{ position: 'absolute', top: '158px', left: '390px' }}
+                          className="w-[130px] h-[23vh] border border-gray-500 bg-[#CAF4FF]"
+                          style={{ position: 'absolute', top: '158px', left: '388px' }}
                         >
                           <div className="text-left bg-[#003285] text-[13.5px] text-white pl-2">
                             <p>List of Periodicities</p>
