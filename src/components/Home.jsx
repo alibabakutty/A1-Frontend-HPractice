@@ -79,9 +79,10 @@ const Home = () => {
                 
             ]
         },
-        { id: 36, name: 'Project Category', 
+        { id: 36, name: 'Project Category Master', 
             subItems: [
-                { id: 37, name: 'Project Master', path: 'menu/projectMaster'}
+                { id: 37, name: 'Project Category', path: 'menu/projectCategory'},
+                { id: 38, name: 'Project Name', path: 'menu/projectName'},
             ]
         }
     ];
@@ -114,7 +115,7 @@ const Home = () => {
 
     useEffect(() => {
         const handleKeyDown = event => {
-            const projectMasterIndex = filteredItems.findIndex(item => item.name === 'Project Master');
+            const projectMasterIndex = filteredItems.findIndex(item => item.name === 'Project Name');
     
             if (event.key === 'ArrowUp') {
                 setActiveIndex(prev => {
@@ -158,12 +159,12 @@ const Home = () => {
     return (
         <>
         <div className="container flex">
-            <div className='w-[96%] h-[93.3vh] flex'>
+            <div className='w-[96%] h-[92.9vh] flex'>
                  <div className='w-1/2 bg-gradient-to-t to-blue-500 from-[#ccc]'></div>
                  <div className='w-1/2 bg-slate-100 border border-l-blue-400 flex justify-center flex-col items-center'>
                     <div className="w-[50%] h-16 flex flex-col justify-center items-center border border-black bg-white border-b-0 ">
                         <p className="text-[13px] font-semibold underline underline-offset-4 decoration-gray-400">
-                            All Masters
+                            Masters
                         </p>
                         <input
                             type="text"
@@ -187,7 +188,7 @@ const Home = () => {
                                 </p>
                             </Link>
                         </div>
-                        <div className='overflow-y-scroll h-[73vh]'>
+                        <div className='overflow-y-scroll h-[70vh]'>
                             {filteredItems.map((item, index) => (
                                 <div key={item.id} ref={el => itemRefs.current[index] = el}>
                                     <Link to={`/${item.path}`}>
