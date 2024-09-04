@@ -16,7 +16,7 @@ const Home = () => {
         },
         { id: 5, name: 'Accounting Info Master', 
             subItems: [
-                { id: 6, name: 'Account Group', path: 'menu/group' },
+                { id: 6, name: 'Account Group', path: 'menu/groupName' },
                 { id: 7, name: 'Account Ledger', path: 'menu/ledger' }
             ] 
         },
@@ -30,12 +30,12 @@ const Home = () => {
          },
         { id: 13, name: 'Supplier Master' ,
             subItems: [
-                { id: 14, name: 'Sundry Creditors', path: 'menu/sundryCreditors'}
+                { id: 14, name: 'Sundry Creditors', path: 'menu/sundryCreditor'}
             ]
         },
         { id: 15, name: 'Customer Master',
             subItems: [
-                { id: 16, name: 'Sundry Debtors', path: 'menu/sundryDebtors'}
+                { id: 16, name: 'Sundry Debtors', path: 'menu/sundryDebtor'}
             ]
         },
         { id: 17, name: 'Department Master', 
@@ -45,7 +45,7 @@ const Home = () => {
         },
         { id: 19, name: 'Location Master',
             subItems: [
-                { id: 20, name: 'Godown Name', path: 'menu/location'}
+                { id: 20, name: 'Godown Name', path: 'menu/godown'}
             ]
         },
         { id: 21, name: 'Head Office Category', 
@@ -61,21 +61,21 @@ const Home = () => {
         { id: 25, name: 'Revenue Category Master', 
             subItems: [
                 { id: 26, name: 'Revenue Category', path: 'menu/revenueCategory'},
-                { id: 27, name: 'Revenue Centre', path: 'menu/revenueCentre'},
+                { id: 27, name: 'Revenue Center', path: 'menu/revenueCenter'},
             ]
         },
         { id: 28, name: 'Cost Category Master', 
             subItems: [
                 { id: 29, name: 'Cost Category', path: 'menu/costCategory'},
-                { id: 30, name: 'Cost Centre', path: 'menu/costCentre'},
+                { id: 30, name: 'Cost Center', path: 'menu/costCenter'},
             ]
         },
         { id: 31, name: 'Batch Master', 
             subItems: [
-                { id: 32, name: 'Batch Master - Category', path: 'menu/batchMasterCategory'},
-                { id: 33, name: 'Batch Master - Serial No', path: 'menu/batchMasterSerialNumber'},
-                { id: 34, name: 'Batch Master - Color', path: 'menu/batchMasterColor'},
-                { id: 35, name: 'Batch Master - Size', path: 'menu/batchMasterSize'},
+                { id: 32, name: 'Batch Master - Category', path: 'menu/batchCategory'},
+                { id: 33, name: 'Batch Master - Serial No', path: 'menu/batchSerialNumber'},
+                { id: 34, name: 'Batch Master - Color', path: 'menu/batchColor'},
+                { id: 35, name: 'Batch Master - Size', path: 'menu/batchSize'},
                 
             ]
         },
@@ -109,8 +109,8 @@ const Home = () => {
             inputRef.current.focus();
         }
 
-         // Set activeIndex to 1 by default and 0 when filter is applied
-        setActiveIndex(filter ? 0 : 1); // Reset to the first item when filter changes
+        // Reset to the first item when filter changes
+        setActiveIndex(filteredItems.length > 0 ? 0 : -1);   // Ensure valid index or -1 if no items
     }, [filter]);
 
     useEffect(() => {
@@ -119,18 +119,18 @@ const Home = () => {
     
             if (event.key === 'ArrowUp') {
                 setActiveIndex(prev => {
-                    let newIndex = prev - 1;
+                    let newIndex = Math.max(prev - 1, -1);  // Prevent index from going below -1
                     while (newIndex >= 0 && !filteredItems[newIndex].isSubItem) {
                         newIndex--;
                     }
                     if (itemRefs.current[newIndex]) {
                         itemRefs.current[newIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     }
-                    return Math.max(-1, newIndex); // Ensure activeIndex is at least -1
+                    return newIndex; // Ensure activeIndex is at least -1
                 });
             } else if (event.key === 'ArrowDown') {
                 setActiveIndex(prev => {
-                    let newIndex = prev + 1;
+                    let newIndex = Math.min(prev + 1, filteredItems.length - 1);   // Prevent index from exceeding the filtered length
                     while (newIndex < filteredItems.length && !filteredItems[newIndex].isSubItem) {
                         newIndex++;
                     }
@@ -147,7 +147,7 @@ const Home = () => {
                 if (activeIndex === -1) {
                     navigate('/changeCompany');
                 } else if (filteredItems[activeIndex]?.path) {
-                    navigate(`/${filteredItems[activeIndex].path}`);
+                    navigate(`/${filteredItems[activeIndex].path}`, {state: { preventConfirm: true }});
                 }
             }
         };
@@ -159,8 +159,8 @@ const Home = () => {
     return (
         <>
         <div className="container flex">
-            <div className='w-[96%] h-[92.9vh] flex'>
-                 <div className='w-1/2 bg-gradient-to-t to-blue-500 from-[#ccc]'></div>
+            <div className='w-[97%] h-[92.9vh] flex'>
+                 <div className='w-[49%] bg-gradient-to-t to-blue-500 from-[#ccc]'></div>
                  <div className='w-1/2 bg-slate-100 border border-l-blue-400 flex justify-center flex-col items-center'>
                     <div className="w-[50%] h-16 flex flex-col justify-center items-center border border-black bg-white border-b-0 ">
                         <p className="text-[13px] font-semibold underline underline-offset-4 decoration-gray-400">

@@ -19,6 +19,32 @@ import HeadOfficeDisplay from "./components/forms/HeadOfficeDisplay"
 import HeadOfficeAlter from "./components/forms/HeadOfficeAlter"
 import BranchOfficeDisplay from "./components/forms/BranchOfficeDisplay"
 import BranchOfficeAlter from "./components/forms/BranchOfficeAlter"
+import RevenueCategoryDisplay from "./components/forms/RevenueCategoryDisplay"
+import RevenueCategoryAlter from "./components/forms/RevenueCategoryAlter"
+import RevenueCentreDisplay from "./components/forms/RevenueCenterDisplay"
+import RevenueCentreAlter from "./components/forms/RevenueCenterAlter"
+import CostCategoryDisplay from "./components/forms/CostCategoryDisplay"
+import CostCenterDisplay from "./components/forms/CostCenterDisplay"
+import BatchCategoryDisplay from "./components/forms/BatchCategoryDisplay"
+import BatchSerialNumberDisplay from "./components/forms/BatchSerialNumberDisplay"
+import BatchColorDisplay from "./components/forms/BatchColorDisplay"
+import BatchSizeDisplay from "./components/forms/BatchSizeDisplay"
+import ProjectCategoryDisplay from "./components/forms/ProjectCategoryDisplay"
+import ProjectNameDisplay from "./components/forms/ProjectNameDisplay"
+import CostCategoryAlter from "./components/forms/CostCategoryAlter"
+import CostCenterAlter from "./components/forms/CostCenterAlter"
+import BatchCategoryAlter from "./components/forms/BatchCategoryAlter"
+import BatchSerialNumberAlter from "./components/forms/BatchSerialNumberAlter"
+import BatchColorAlter from "./components/forms/BatchColorAlter"
+import BatchSizeAlter from "./components/forms/BatchSizeAlter"
+import ProjectCategoryAlter from "./components/forms/ProjectCategoryAlter"
+import ProjectNameAlter from "./components/forms/ProjectNameAlter"
+import SundryCreditorsDisplay from "./components/forms/SundryCreditorsDisplay"
+import SundryDebtorsDisplay from "./components/forms/SundryDebtorsDisplay"
+import SundryDebtorsAlter from "./components/forms/SundryDebtorsAlter"
+import SundryCreditorsAlter from "./components/forms/SundryCreditorsAlter"
+import SundryCreditorForm from "./components/forms/SundryCreditorForm"
+import SundryCreditorSubForm from "./components/forms/SundryCreditorSubForm"
 
 function App() {
   
@@ -35,19 +61,45 @@ function App() {
           <Route path="menu/:type" element={<CreateMasterFormRouter />} />
           <Route path="/:type/display" element={<DisplayFilter />} />
           <Route path="/:type/alter" element={<AlterFilter />} />
-          <Route path="/voucherTypeMasterApi/display/:type" element={<VoucherTypeDisplay />} />
-          <Route path="/preDefinedVoucherTypeApi/displayPreDefinedVoucher/:type" element={<VoucherTypeDisplay />} />
-          <Route path="/currencyMasterApi/displayCurrency/:type" element={<CurrencyDisplay />} />
-          <Route path="/departmentMasterApi/displayDepartment/:type" element={<DepartmentDisplay />} />
-          <Route path="/locationMasterApi/displayGodown/:type" element={<LocationDisplay />} />
-          <Route path="headOfficeMasterApi/displayHeadOffice/:type" element={<HeadOfficeDisplay />} />
-          <Route path="/branchOfficeMasterApi/displayBranchOffice/:type" element={<BranchOfficeDisplay />} />
-          <Route path="/voucherTypeMasterApi/alterVoucherTypeMaster/:type" element={<VoucherTypeAlter />} />
-          <Route path="/currencyMasterApi/alterCurrencyMaster/:type" element={<CurrencyAlter />} />
-          <Route path="/departmentMasterApi/alterDepartmentMaster/:type" element={<DepartmentAlter />} />
-          <Route path="/locationMasterApi/alterGodown/:type" element={<LocationAlter />} />
-          <Route path="/headOfficeMasterApi/alterHeadOfficeMaster/:type" element={<HeadOfficeAlter />} />
-          <Route path="/branchOfficeMasterApi/alterBranchOfficeMaster/:type" element={<BranchOfficeAlter />} />
+          <Route path="/voucherTypeMasterApi/display/:datas" element={<VoucherTypeDisplay />} />
+          <Route path="/preDefinedVoucherTypeApi/displayPreDefinedVoucher/:datas" element={<VoucherTypeDisplay />} />
+          <Route path="/currencyMasterApi/displayCurrency/:datas" element={<CurrencyDisplay />} />
+          <Route path="/departmentMasterApi/displayDepartment/:datas" element={<DepartmentDisplay />} />
+          <Route path="/locationMasterApi/displayGodown/:datas" element={<LocationDisplay />} />
+          <Route path="headOfficeMasterApi/displayHeadOffice/:datas" element={<HeadOfficeDisplay />} />
+          <Route path="/branchOfficeMasterApi/displayBranchOffice/:datas" element={<BranchOfficeDisplay />} />
+          <Route path="/revenueCategoryMasterApi/displayRevenueCategory/:datas" element={<RevenueCategoryDisplay />} />
+          <Route path="/revenueCenterMasterApi/displayRevenueCenter/:datas" element={<RevenueCentreDisplay />} />
+          <Route path="/costCategoryMasterApi/displayCostCategory/:datas" element={<CostCategoryDisplay />} />
+          <Route path="/costCenterMasterApi/displayCostCenter/:datas" element={<CostCenterDisplay />} />
+          <Route path="/batchCategoryMasterApi/displayBatchCategory/:datas" element={<BatchCategoryDisplay />} />
+          <Route path="/batchSerialNumberMasterApi/displayBatchSerialNumber/:datas" element={<BatchSerialNumberDisplay />} />
+          <Route path="/batchColorMasterApi/displayBatchColor/:datas" element={<BatchColorDisplay />} />
+          <Route path="/batchSizeMasterApi/displayBatchSize/:datas" element={<BatchSizeDisplay />} />
+          <Route path="/projectCategoryMasterApi/displayProjectCategory/:datas" element={<ProjectCategoryDisplay />} />
+          <Route path="/projectNameMasterApi/displayProjectName/:datas" element={<ProjectNameDisplay />} />
+          <Route path="/sundryCreditorMasterApi/displaySundryCreditor/:datas" element={<SundryCreditorsDisplay />} />
+          <Route path="/sundryDebtorMasterApi/displaySundryDebtor/:datas" element={<SundryDebtorsDisplay />} />
+          <Route path="/voucherTypeMasterApi/alterVoucherTypeMaster/:datas" element={<VoucherTypeAlter />} />
+          <Route path="/currencyMasterApi/alterCurrencyMaster/:datas" element={<CurrencyAlter />} />
+          <Route path="/departmentMasterApi/alterDepartmentMaster/:datas" element={<DepartmentAlter />} />
+          <Route path="/locationMasterApi/alterGodown/:datas" element={<LocationAlter />} />
+          <Route path="/headOfficeMasterApi/alterHeadOfficeMaster/:datas" element={<HeadOfficeAlter />} />
+          <Route path="/branchOfficeMasterApi/alterBranchOfficeMaster/:datas" element={<BranchOfficeAlter />} />
+          <Route path="/revenueCategoryMasterApi/alterRevenueCategoryMaster/:datas" element={<RevenueCategoryAlter />} />
+          <Route path="/revenueCenterMasterApi/alterRevenueCenterMaster/:datas" element={<RevenueCentreAlter />} />
+          <Route path="/costCategoryMasterApi/alterCostCategoryMaster/:datas" element={<CostCategoryAlter />} />
+          <Route path="/costCenterMasterApi/alterCostCenterMaster/:datas" element={<CostCenterAlter />} />
+          <Route path="/batchCategoryMasterApi/alterBatchCategoryMaster/:datas" element={<BatchCategoryAlter />} />
+          <Route path="/batchSerialNumberMasterApi/alterBatchSerialNumberMaster/:datas" element={<BatchSerialNumberAlter />} />
+          <Route path="/batchColorMasterApi/alterBatchColorMaster/:datas" element={<BatchColorAlter />} />
+          <Route path="/batchSizeMasterApi/alterBatchSizeMaster/:datas" element={<BatchSizeAlter />} />
+          <Route path="/projectCategoryMasterApi/alterProjectCategoryMaster/:datas" element={<ProjectCategoryAlter />} />
+          <Route path="/projectNameMasterApi/alterProjectNameMaster/:datas" element={<ProjectNameAlter />} />
+          <Route path="/sundryCreditorMasterApi/alterSundryCreditorMaster/:datas" element={<SundryCreditorsAlter />} />
+          <Route path="/sundryDebtorMasterApi/alterSundryDebtorMaster/:datas" element={<SundryDebtorsAlter />} />
+          <Route path="/sk" element={<SundryCreditorForm />} />
+          <Route path="/skm" element={<SundryCreditorSubForm />} />
         </Routes>
       </BrowserRouter>
     </>

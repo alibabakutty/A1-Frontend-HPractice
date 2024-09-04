@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import RightSideButton from '../right-side-button/RightSideButton'
-import { useNavigate } from 'react-router-dom';
-import { createRevenueCenterMaster, listOfRevenueCategories } from '../services/MasterService';
-import LeftSideMenu from '../left-side-menu/LeftSideMenu';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getSpecificRevenueCenter, listOfRevenueCategories, updateRevenueCenterMaster } from '../services/MasterService';
 
-const RevenueCentreCreate = () => {
+const RevenueCentreAlter = () => {
+  const { datas } = useParams();
   const [revenueCenter, setRevenueCenter] = useState({
     revenueCenterName: '',
     revenueCategoryName: ''
@@ -18,9 +18,26 @@ const RevenueCentreCreate = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (inputRefs.current[0]) {
-      inputRefs.current[0].focus();
+    const focusAndPulseCursor = () => {
+      if (inputRefs.current[0]){
+          inputRefs.current[0]?.focus();
+          inputRefs.current[0]?.setSelectionRange(0,0);
+      }
     }
+
+    setTimeout(focusAndPulseCursor, 100);
+
+    const loadRevenueCenters = async () => {
+      try {
+        const result = await getSpecificRevenueCenter(datas);
+        console.log(result.data);
+        setRevenueCenter(result.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    loadRevenueCenters();
 
     listOfRevenueCategories()
       .then(response => {
@@ -128,38 +145,38 @@ const RevenueCentreCreate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await createRevenueCenterMaster(revenueCenter);
+      const response = await updateRevenueCenterMaster(datas,revenueCenter);
       console.log(response.data);
       // After the submit
-      setRevenueCenter({ revenueCenterName: '', revenueCategoryName: '' });
       if (inputRefs.current[0]) {
         inputRefs.current[0].focus();
       }
     } catch (error) {
       console.error(error);
     }
+    navigate(-1);
   };
 
   return (
     <>
       <div className='flex'>
-        <LeftSideMenu />
-        <form className='border border-slate-500 w-[45.5%] h-[15vh] absolute left-[44.5%]' onSubmit={handleSubmit}>
-          <div className='text-sm pl-3 mt-3 flex'>
-            <label htmlFor="revenueCenterName" className='w-[29.3%]'>Revenue Center Name</label>
+        <div className='bg-slate-400 w-[50%] h-[92.9vh] border border-r-blue-400'></div>
+        <form className='border border-slate-500 w-[40%] h-[15vh] absolute left-[50%]' onSubmit={handleSubmit}>
+          <div className='text-sm p-3 flex'>
+            <label htmlFor="revenueCenterName" className='w-[30%]'>Revenue Center Name</label>
             <span>:</span>
-            <input type="text" id='revenueCenterName' name='revenueCenterName' value={revenueCenter.revenueCenterName} onChange={handleInputChange} ref={input => inputRefs.current[0] = input} onKeyDown={(e) => handleKeyDown(e, 0)} className='w-[400px] ml-2 h-5 pl-1 font-medium text-sm capitalize focus:bg-yellow-200 focus:outline-none focus:border-blue-500 focus:border' autoComplete='off' />
+            <input type="text" id='revenueCenterName' name='revenueCenterName' value={revenueCenter.revenueCenterName} onChange={handleInputChange} ref={input => inputRefs.current[0] = input} onKeyDown={(e) => handleKeyDown(e, 0)} className='w-[300px] ml-2 h-5 pl-1 font-medium text-sm capitalize focus:bg-yellow-200 focus:outline-none focus:border-blue-500 focus:border' autoComplete='off' />
           </div>
           <div className='text-sm flex pl-3'>
             <label htmlFor="revenueCategoryName" className='w-[29.3%]'>Under</label>
             <span>:</span>
-            <input type="text" id='revenueCategoryName' name='revenueCategoryName' value={revenueCenter.revenueCategoryName} onChange={handleInputChange} ref={(input) => (inputRefs.current[1] = input)} onKeyDown={(e) => handleKeyDown(e, 1)} onFocus={(e) => {setRevenueCategoryFocused(true); handleInputChange(e);}} onBlur={() => setRevenueCategoryFocused(false)} className='w-[400px] ml-2 h-5 pl-1 font-medium text-sm capitalize focus:bg-yellow-200 focus:outline-none focus:border-blue-500 focus:border' />
+            <input type="text" id='revenueCategoryName' name='revenueCategoryName' value={revenueCenter.revenueCategoryName} onChange={handleInputChange} ref={(input) => (inputRefs.current[1] = input)} onKeyDown={(e) => handleKeyDown(e, 1)} onFocus={(e) => {setRevenueCategoryFocused(true); handleInputChange(e);}} onBlur={() => setRevenueCategoryFocused(false)} className='w-[300px] ml-2 h-5 pl-1 font-medium text-sm capitalize focus:bg-yellow-200 focus:outline-none focus:border-blue-500 focus:border' />
             {revenueCategoryFocused && filteredSuggestion.length > 0 && (
-              <div className='w-[40%] h-[92.7vh] border border-gray-500 bg-[#CAF4FF] z-10 absolute left-[372px] top-0'>
+              <div className='w-[40%] h-[92.7vh] border border-gray-500 bg-[#CAF4FF] z-10 absolute left-[327px] top-0'>
                 <div className='text-left bg-[#003285] text-[13.5px] text-white pl-2'>
                   <p>List of Revenue Categories</p>
                 </div>
-                <ul className='suggestions w-full h-[87vh] text-left text-sm mt-2' ref={optionsRef}>
+                <ul className='suggestions w-full h-[87vh] text-left text-sm mt-2 overflow-y-scroll' ref={optionsRef}>
                   {filteredSuggestion.map((revenueCategory, index) => (
                     <li key={index} tabIndex={0} className={`pl-2 capitalize cursor-pointer hover:bg-yellow-200 ${highlightedSuggestionRevenueCategory === index ? 'bg-yellow-200' : ''}`} onClick={() => handleSuggestionClick(revenueCategory)} onMouseDown={(e) => e.preventDefault()}>
                       {revenueCategory.revenueCategoryName}
@@ -176,4 +193,4 @@ const RevenueCentreCreate = () => {
   )
 }
 
-export default RevenueCentreCreate;
+export default RevenueCentreAlter;
